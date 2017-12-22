@@ -1,0 +1,90 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>MesajView</title>
+
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+</head>
+<body>
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="form-group mesajTextarea">
+                <label for="comment">Mesaj:</label>
+                <textarea class="form-control" rows="5" id="mesaj"></textarea>
+
+                <button class="btn btn-success mesajButton" id="mesajGonder">Gönder</button>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="mesajListe">
+                <table class="table table-bordered" id="mesajlarTablosu">
+                    
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <style>
+
+        .mesajTextarea{
+            padding-top:15px;
+            padding-left:15px;
+            padding-right:15px;
+        }
+
+        .mesajButton{
+            margin-top:10px;
+        }
+
+        .mesajListe{
+            padding-top:38px;
+            padding-left:15px;
+            padding-right:15px;
+        }
+
+    </style>
+
+    <script>
+
+        $(function () {
+
+            setInterval(mesajListele(), 3000);
+
+        });
+
+        $("#mesajGonder").click(function () {
+            var mesaj = $("#mesaj").val();
+            $.post("/Mesaj/MesajEkle", { mesaj: mesaj }, function (result) {
+                if (result == "+") {
+                    $("#mesaj").val("");
+                    alert("Mesaj Eklendi.");
+                    mesajListele();
+                }
+            });
+        });
+
+        function mesajListele() {
+            $.post("/Mesaj/MesajListele", "", function (result) {
+                $("#mesajlarTablosu").html("");
+                $.each(result, function (i) {
+                    mesajlar = '<tr><td>' + this + '</td></tr>';
+                    $("#mesajlarTablosu").append(mesajlar);
+                });
+            });
+        }
+
+    </script>
+
+</body>
+</html>
